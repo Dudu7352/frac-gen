@@ -1,6 +1,6 @@
 use num::Complex;
 
-use super::fracral_type::FractalType;
+use super::frac_type::FracType;
 
 #[derive(Clone)]
 pub struct FractalOptions {
@@ -8,7 +8,7 @@ pub struct FractalOptions {
     pub resolution: usize,
     pub center: usize,
     pub offset: Complex<f64>,
-    pub fractal: FractalType,
+    pub fractal: FracType,
 }
 
 impl FractalOptions {
@@ -17,7 +17,7 @@ impl FractalOptions {
         resolution: usize,
         center: usize,
         offset: Complex<f64>,
-        fractal: FractalType,
+        fractal: FracType,
     ) -> Self {
         Self {
             scale,

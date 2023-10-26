@@ -1,7 +1,8 @@
 use num::Complex;
 
 #[derive(Clone)]
-pub enum FractalType {
+pub enum FracType {
     Mandelbrot,
     Julia(Complex<f64>),
 }
+

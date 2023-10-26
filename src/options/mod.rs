@@ -1,3 +1,3 @@
 pub mod fractal_options;
 pub mod render_range;
-pub mod fracral_type;
+pub mod frac_type;
