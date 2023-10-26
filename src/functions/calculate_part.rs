@@ -1,11 +1,11 @@
 use num::Complex;
 
-use crate::options::{FractalOptions, Range};
+use crate::options::{fractal_options::FractalOptions, render_range::RenderRange};
 
 pub fn calculate_part(
     id: usize,
     options: FractalOptions,
-    range: Range
+    range: RenderRange
 ) -> Vec<u8> {
     let mut v = Vec::with_capacity((range.end - range.start) * options.resolution);
     for y in range.start..range.end {
