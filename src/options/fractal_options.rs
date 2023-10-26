@@ -1,5 +1,7 @@
 use num::Complex;
 
+use super::fracral_type::FractalType;
+
 #[derive(Clone)]
 pub struct FractalOptions {
     pub scale: f64,
@@ -35,13 +37,3 @@ impl FractalOptions {
     }
 }
 
-#[derive(Clone)]
-pub enum FractalType {
-    Mandelbrot,
-    Julia(Complex<f64>),
-}
-
-pub struct RenderRange {
-    pub start: usize,
-    pub end: usize,
-}
