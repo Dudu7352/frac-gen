@@ -4,5 +4,7 @@ pub struct RenderRange {
 }
 
 impl RenderRange {
-    pub fn new(start: usize, end: usize) -> Self { Self { start, end } }
+    pub fn new(start: usize, end: usize) -> Self {
+        Self { start, end }
+    }
 }

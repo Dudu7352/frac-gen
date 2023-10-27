@@ -36,4 +36,3 @@ impl FractalOptions {
         (y - self.center as f64) / self.scale + self.offset.im
     }
 }
-
