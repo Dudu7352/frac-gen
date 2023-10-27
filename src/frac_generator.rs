@@ -47,7 +47,6 @@ impl FracGenerator {
         if self.opts.log {
             info!("Add generator threads finished working");
             info!("Creating Imagebuffer");
-            println!("pixels: {}", pixels.len());
         }
 
         match ImageBuffer::from_raw(
