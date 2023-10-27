@@ -1,4 +1,5 @@
 use image::ImageBuffer;
+use log::info;
 
 use std::thread;
 
@@ -20,6 +21,11 @@ impl FracGenerator {
         let mut pixels = Vec::with_capacity(self.opts.resolution * self.opts.resolution);
         let mut th = Vec::with_capacity(threads);
 
+        if self.opts.log {
+            env_logger::init();
+            info!("Starting {} threads", threads);
+        }
+
         for thread_id in 0..threads {
             let end = if thread_id == threads - 1 {
                 self.opts.resolution
@@ -36,6 +42,11 @@ impl FracGenerator {
 
         for t in th {
             pixels.append(&mut t.join().unwrap());
+        }
+
+        if self.opts.log {
+            info!("Add generator threads finished working");
+            info!("Creating Imagebuffer");
         }
 
         ImageBuffer::from_raw(
