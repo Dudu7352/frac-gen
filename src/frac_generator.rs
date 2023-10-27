@@ -2,7 +2,7 @@ use image::ImageBuffer;
 
 use std::thread;
 
-use crate::options::fractal_options::FractalOptions;
+use crate::{options::{fractal_options::FractalOptions, render_range::{RenderRange, self}}, functions::calculate_part::calculate_part};
 
 pub struct FracGenerator {
     pub opts: FractalOptions
@@ -19,18 +19,22 @@ impl FracGenerator {
         let mut pixels = Vec::with_capacity(self.opts.resolution * self.opts.resolution);
         let mut th = Vec::with_capacity(threads);
 
-        for i in 0..threads {
+        for thread_id in 0..threads {
             
-            let end = if i == threads - 1 {
+            let end = if thread_id == threads - 1 {
                 self.opts.resolution
             } else {
-                (self.opts.resolution / threads) * i + 1
+                (self.opts.resolution / threads) * thread_id + 1
             };
 
             let opts_clone = self.opts.clone();
+            let render_range = RenderRange::new((opts_clone.resolution / threads) * thread_id, end);
             th.push(thread::spawn(move || {
-                //TODO: image part calculation
-                vec![]
+                calculate_part(
+                    thread_id, 
+                    opts_clone,
+                    render_range
+                )
             }));
         }
 
