@@ -30,7 +30,7 @@ impl FracGenerator {
             let end = if thread_id == threads - 1 {
                 self.opts.resolution
             } else {
-                (self.opts.resolution / threads) * thread_id + 1
+                (self.opts.resolution / threads) * (thread_id + 1)
             };
 
             let opts_clone = self.opts.clone();
