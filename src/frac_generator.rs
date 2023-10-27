@@ -17,7 +17,7 @@ impl FracGenerator {
         Self { opts }
     }
 
-    pub async fn generate_image(&self, threads: usize) -> ImageBuffer<image::Luma<u8>, Vec<u8>> {
+    pub async fn generate_image(&self, threads: usize) -> Result<ImageBuffer<image::Luma<u8>, Vec<u8>>, String> {
         let mut pixels = Vec::with_capacity(self.opts.resolution * self.opts.resolution);
         let mut th = Vec::with_capacity(threads);
 
@@ -47,13 +47,16 @@ impl FracGenerator {
         if self.opts.log {
             info!("Add generator threads finished working");
             info!("Creating Imagebuffer");
+            println!("pixels: {}", pixels.len());
         }
 
-        ImageBuffer::from_raw(
+        match ImageBuffer::from_raw(
             self.opts.resolution as u32,
             self.opts.resolution as u32,
             pixels,
-        )
-        .unwrap()
+        ) {
+            Some(val) => Ok(val),
+            None => Err(String::from("Image could not be created")),
+        }
     }
 }
