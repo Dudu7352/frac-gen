@@ -5,19 +5,45 @@ use std::thread;
 
 use crate::{
     functions::calculate_part::calculate_part,
-    options::{fractal_options::FractalOptions, render_range::RenderRange},
+    options::{fractal_options::FractalOptions, render_range::RenderRange, gen_method::GenMethod},
 };
 
 pub struct FracGenerator {
     pub opts: FractalOptions,
+    pub gen_method: GenMethod
 }
 
 impl FracGenerator {
-    pub fn new(opts: FractalOptions) -> Self {
-        Self { opts }
+    pub fn new(opts: FractalOptions, gen_method: GenMethod) -> Self {
+        Self { opts, gen_method }
     }
 
-    pub async fn generate_image(&self, threads: usize) -> Result<ImageBuffer<image::Luma<u8>, Vec<u8>>, String> {
+    fn to_image_buffer(&self, pixels: Vec<u8>) -> Result<ImageBuffer<image::Luma<u8>, Vec<u8>>, String> {
+        match ImageBuffer::from_raw(
+            self.opts.resolution as u32,
+            self.opts.resolution as u32,
+            pixels,
+        ) {
+            Some(val) => Ok(val),
+            None => Err(String::from("Image could not be created")),
+        }
+    }
+    
+
+    pub async fn generate_image(&self) -> Result<ImageBuffer<image::Luma<u8>, Vec<u8>>, String> {
+        match self.gen_method {
+            GenMethod::SinglethreadAsync => self.generate_image_singlethread().await,
+            GenMethod::MultithreadAsync { threads } => self.generate_image_multithread(threads).await,
+        }
+    }
+
+    async fn generate_image_singlethread(&self) -> Result<ImageBuffer<image::Luma<u8>, Vec<u8>>, String> {
+        self.to_image_buffer(
+            calculate_part(0, self.opts.clone(), RenderRange::new(0, self.opts.resolution))
+        )
+    }
+
+    async fn generate_image_multithread(&self, threads: usize) -> Result<ImageBuffer<image::Luma<u8>, Vec<u8>>, String> {
         let mut pixels = Vec::with_capacity(self.opts.resolution * self.opts.resolution);
         let mut th = Vec::with_capacity(threads);
 
@@ -49,13 +75,6 @@ impl FracGenerator {
             info!("Creating Imagebuffer");
         }
 
-        match ImageBuffer::from_raw(
-            self.opts.resolution as u32,
-            self.opts.resolution as u32,
-            pixels,
-        ) {
-            Some(val) => Ok(val),
-            None => Err(String::from("Image could not be created")),
-        }
+        self.to_image_buffer(pixels)
     }
 }
