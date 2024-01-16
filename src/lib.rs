@@ -19,4 +19,13 @@ mod tests {
         let img = frac_generator.generate_image().await.unwrap();
         assert!(img.width() == res as u32);
     }
+
+    #[tokio::test]
+    async fn large_image() {
+        let res = 100000;
+        let fractal_options = FractalOptions::new(0.3, res, 0, Complex::new(0.0, 0.0), FracType::Mandelbrot, true);
+        let frac_generator = FracGenerator::new(fractal_options, GenMethod::MultithreadAsync { threads: 10 });
+        let img = frac_generator.generate_image().await.unwrap();
+        assert!(img.width() == res as u32);
+    }
 }

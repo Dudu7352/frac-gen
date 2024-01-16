@@ -9,7 +9,6 @@ pub struct FractalOptions {
     pub center: usize,
     pub offset: Complex<f64>,
     pub fractal: FracType,
-    pub log: bool
 }
 
 impl FractalOptions {
@@ -27,7 +26,6 @@ impl FractalOptions {
             center,
             offset,
             fractal,
-            log
         }
     }
 
